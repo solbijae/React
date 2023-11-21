@@ -1,16 +1,14 @@
 const path = require('path');
-var webpack = require('webpack');
-const RefreshWebpackPlugikn = require('@pmmmwh/react-refresh-webpack-plugin');
+const webpack = require('webpack');
+const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin'); // npm i react-refresh @pmmmwh/react-refresh-webpack-plugin -D // npm i -D webpack-dev-server
 
 module.exports = {
-    name: 'wordrelay-setting',
-    mode: 'development',
-    devtool: 'eval', //또는 hidden-source-map를 주로 씀
-    // watch: true,
+    name: "numberbaseball-setting",
+    mode: "development",
+    devtool: 'eval',
     resolve: {
-        extensions: ['.js', '.jsx'] //밑에 entry에서 확장자를 적지 않아도 이 배열에 있는 확장자의 경우 웹팩이 알아서 확인 후 확장자 붙여줌
+        extensions: ['.js', '.jsx']
     },
-    
     entry: {
         app: ['./client']
     },
@@ -25,9 +23,8 @@ module.exports = {
             },
         }],
     },
-
     plugins: [
-        new RefreshWebpackPlugin() //핫리로딩 기능
+        new ReactRefreshWebpackPlugin() //핫리로딩 기능
     ],
 
     output: {
