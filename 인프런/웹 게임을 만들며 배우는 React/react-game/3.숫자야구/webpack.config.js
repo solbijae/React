@@ -1,10 +1,11 @@
 const path = require('path');
 const webpack = require('webpack');
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin'); // npm i react-refresh @pmmmwh/react-refresh-webpack-plugin -D // npm i -D webpack-dev-server
+// process.env.NODE_ENV = 'production'; // production mode
 
 module.exports = {
     name: "numberbaseball-setting",
-    mode: "development",
+    mode: "development", // production으로 하면 모드 바뀜 (위에것도 추가해야 함)
     devtool: 'eval',
     resolve: {
         extensions: ['.js', '.jsx']
