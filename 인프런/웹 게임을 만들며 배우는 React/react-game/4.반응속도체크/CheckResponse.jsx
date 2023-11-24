@@ -1,72 +1,63 @@
 const React = require('react');
-const { Component } = React;
+const { useState, useRef } = React;
 
-class CheckResponse extends Component {
-    state = {
-        state: "waiting",
-        message: "클릭해서 시작하세요.",
-        result: [],
-    };
+const CheckResponse = () => {
+    const [state, setState] = useState('waiting');
+    const [message, setMessage] = useState('클릭해서 시작');
+    const [result, setResult] = useState([]);
+    const timeOut = useRef();
+    const startTime = useRef();
+    const endTime = useRef();
 
-    timeout;
-    startTime;
-    endTime;
-
-    onClickScreen = () => {
-        const { state, message, result } = this.state;
+    const onClickScreen = () => {
         if (state === 'waiting') {
-            this.setState({
-                state: 'ready',
-                message: '초록색이 되면 클릭하세요'
-            });
-            this.timeout = setTimeout(() => {
-                this.setState({
-                    state: 'now',
-                    message: '지금 클릭'
-                });
-                this.startTime = new Date();
+            setState('ready');
+            setMessage('초록색이 되면 클릭하세요')
+            timeOut.current = setTimeout(() => {
+                setState('now');
+                setMessage('지금 클릭');
+                startTime.current = new Date();
             }, Math.floor(Math.random() * 1000) + 2000)
         } else if (state === 'ready') {
-            clearTimeout(this.timeout);
-            this.setState({
-                state: 'waiting',
-                message: '넘 빨리 클릭함'
-            });
+            clearTimeout(timeOut.current);
+            setState('waiting');
+            setMessage('Too fast');
         } else if (state === 'now') {
-            this.endTime = new Date();
-            this.setState((prevState) => {
-                return {
-                    state: 'waiting',
-                    message: '클릭해서 시작하세요.',
-                    result: [...prevState.result, this.endTime - this.startTime]
-                };
-            });
+            endTime.current = new Date();
+            setState('waiting');
+            setMessage('Click to start');
+            setResult((prevResult) => (
+                [...prevResult, endTime.current - startTime.current]
+            ));
         }
     };
 
-    renderAverage = () => {
-        const { result } = this.state;
+    const onReset = () => {
+        setResult([]);
+    };
+
+    const renderAverage = () => {
         return (
             result.length === 0 
-                ? null 
-                : <div>평균시간: {result.reduce((a,c) => a+c) / result.length}ms</div>
-        )
-    }
-
-    render () {
-        return (
-            <>
-                <div
-                    id="screen"
-                    className={this.state.state}
-                    onClick={this.onClickScreen}
-                >
-                    {this.state.message}
-                </div>
-                {this.renderAverage()}
+            ? null 
+            : <>
+                <div>평균시간: {result.reduce((a,c) => a+c) / result.length}ms</div>
+                <button onClick={onReset}>Reset</button>
             </>
-        )
-    }
-};
+        );
+    };
 
+    return (
+        <>
+            <div
+                id="screen"
+                className={state}
+                onClick={onClickScreen}
+            >
+                {message}
+            </div>
+            {renderAverage()}
+        </>
+    )
+};
 module.exports = CheckResponse;
